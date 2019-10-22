@@ -11,23 +11,31 @@ public class PlayerCharacter : MonoBehaviour
     private float maxSpeed = 5;
 
     [SerializeField]
+    private float jumpForce = 10;
+
+    [SerializeField]
     private Rigidbody2D rb2d;
 
     private float horzontalInput;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
     {
         horzontalInput = Input.GetAxis("Horizontal");
 
+        if (Input.GetButtonDown("Jump"))
+        {
+            rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
     }
 
     private void FixedUpdate()
+    {
+        Move();
+    }
+
+    private void Move()
     {
         rb2d.AddForce(Vector2.right * horzontalInput * accelerationForce);
         Vector2 clampedVelocity = rb2d.velocity;
