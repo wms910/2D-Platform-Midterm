@@ -17,12 +17,18 @@ public class PlayerCharacter : MonoBehaviour
     private Rigidbody2D rb2d;
 
     [SerializeField]
+    private Collider2D playerGroundCollider;
+
+    [SerializeField]
+    private PhysicsMaterial2D playerMovingPhysicsMaterial, playerStoppingPhysicsMaterial;
+
+    [SerializeField]
     private Collider2D groundDetectTrigger;
 
     [SerializeField]
     private ContactFilter2D groundContactFilter;
 
-    private float horzontalInput;
+    private float horizontalInput;
     private bool isOnGround;
     private Collider2D[] groundHitDetectionResults = new Collider2D[16];
 
@@ -36,6 +42,24 @@ public class PlayerCharacter : MonoBehaviour
         HandleJumpInput();
     }
 
+    private void FixedUpdate()
+    {
+        UpdatePhysicsMaterial();
+        Move();
+    }
+    private void UpdatePhysicsMaterial()
+    {
+        if (Mathf.Abs(horizontalInput) > 0)
+        {
+            playerGroundCollider.sharedMaterial = playerMovingPhysicsMaterial;
+        }
+
+        else
+        {
+            playerGroundCollider.sharedMaterial = playerStoppingPhysicsMaterial;
+        }
+    }
+
     private void UpdateIsOnGround()
     {
         isOnGround = groundDetectTrigger.OverlapCollider(groundContactFilter, groundHitDetectionResults) > 0;
@@ -44,7 +68,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void UpdateHorizontalInput()
     {
-        horzontalInput = Input.GetAxis("Horizontal");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
     }
 
     private void HandleJumpInput()
@@ -55,14 +79,9 @@ public class PlayerCharacter : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
     private void Move()
     {
-        rb2d.AddForce(Vector2.right * horzontalInput * accelerationForce);
+        rb2d.AddForce(Vector2.right * horizontalInput * accelerationForce);
         Vector2 clampedVelocity = rb2d.velocity;
         clampedVelocity.x = Mathf.Clamp(rb2d.velocity.x, -maxSpeed, maxSpeed);
         rb2d.velocity = clampedVelocity;
