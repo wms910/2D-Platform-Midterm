@@ -94,6 +94,7 @@ public class PlayerCharacter : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
         else
         {
             rb2d.velocity = Vector2.zero;
@@ -104,6 +105,12 @@ public class PlayerCharacter : MonoBehaviour
 
     public void SetCurrentCheckpoint(Checkpoint newCurrentCheckppoint)
     {
+        if(currentCheckpoint != null)
+        {
+            currentCheckpoint.SetIsActivated(false);
+        }
+        
         currentCheckpoint = newCurrentCheckppoint;
+        currentCheckpoint.SetIsActivated(true);
     }
 }
