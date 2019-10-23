@@ -33,8 +33,12 @@ public class PlayerCharacter : MonoBehaviour
     private bool isOnGround;
     private Collider2D[] groundHitDetectionResults = new Collider2D[16];
     private Checkpoint currentCheckpoint;
+    private AudioSource audioSource;
 
-
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -76,6 +80,7 @@ public class PlayerCharacter : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump") && isOnGround)
         {
+            audioSource.Play();
             rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
